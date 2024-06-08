@@ -1,0 +1,36 @@
+-- RainPartsScript
+-- This script will make it rain parts in the game.
+
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+local function createPart()
+    local part = Instance.new("Part")
+    part.Size = Vector3.new(2, 2, 2) -- Size of the raindrop parts
+    part.Position = Vector3.new(math.random(-50, 50), 100, math.random(-50, 50)) -- Random position above the workspace
+    part.Anchored = true -- So it doesn't fall
+    part.CanCollide = true -- Prevents collision with other objects
+    part.BrickColor = BrickColor.Random() -- Gives a random color to each part
+	part.Parent = Workspace
+    return part
+end
+
+local function movePart(part)
+    local goalPosition = part.Position - Vector3.new(0, 100, 0) -- Moves the part downwards
+    local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Linear) -- 5 seconds to reach the ground
+    local tween = game:GetService("TweenService"):Create(part, tweenInfo, {Position = goalPosition})
+    tween:Play()
+    tween.Completed:Connect(function()
+    end)
+end
+
+local function startRaining()
+    RunService.Heartbeat:Connect(function()
+        task.wait(0.5) -- Wait for half a second before creating the next part
+        local part = createPart()
+        movePart(part)
+    end)
+end
+
+startRaining()
+print("+1 Part Added")
